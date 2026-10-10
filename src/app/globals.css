@@ -15,7 +15,7 @@
   --color-violet: #8b6cff;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-sora), var(--font-geist-sans), ui-sans-serif, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-geist-sans), ui-sans-serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -86,4 +86,41 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Flutuação lenta dos ícones decorativos. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(-7px) rotate(-2.5deg);
+  }
+  50% {
+    transform: translateY(7px) rotate(2.5deg);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+/* Granulado sutil sobre toda a página, para tirar o aspecto chapado do fundo. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

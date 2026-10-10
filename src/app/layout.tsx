@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Sora } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { site } from "@/data/site";
 import "./globals.css";
@@ -14,10 +14,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const sora = Sora({
-  variable: "--font-sora",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -62,9 +61,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="pt-BR"
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} antialiased`}
     >
       <body className="min-h-svh">
+        {/* Sem JavaScript, as animações de entrada não rodam: exibe tudo de imediato. */}
+        <noscript>
+          <style>{"[data-reveal]{opacity:1!important;transform:none!important}"}</style>
+        </noscript>
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

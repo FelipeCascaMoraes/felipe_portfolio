@@ -1,4 +1,5 @@
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
+import { siWhatsapp } from "simple-icons";
 import type { ContactChannelId } from "@/data/contact";
 
 interface ContactIconProps {
@@ -7,15 +8,19 @@ interface ContactIconProps {
 }
 
 /**
- * Ícones dos canais de contato. O Lucide não inclui marcas, então GitHub e
- * LinkedIn são desenhados aqui no mesmo traço dos demais ícones.
+ * Ícones dos canais de contato. O WhatsApp usa o símbolo oficial (Simple Icons);
+ * GitHub e LinkedIn são desenhados aqui no mesmo traço dos demais ícones.
  */
 export function ContactIcon({ channel, className }: ContactIconProps) {
   if (channel === "email") {
     return <Mail aria-hidden="true" className={className} strokeWidth={1.75} />;
   }
   if (channel === "whatsapp") {
-    return <MessageCircle aria-hidden="true" className={className} strokeWidth={1.75} />;
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+        <path d={siWhatsapp.path} />
+      </svg>
+    );
   }
 
   return (

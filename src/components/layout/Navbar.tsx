@@ -3,9 +3,10 @@
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { ButtonLink } from "@/components/ui/ButtonLink";
+import { ContactCta } from "@/components/ui/ContactCta";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
+import { CONTACT_ANCHOR, whatsappUrl } from "@/data/contact";
 import { navigation, site } from "@/data/site";
 
 const MOBILE_MENU_ID = "menu-mobile";
@@ -97,7 +98,7 @@ export function Navbar() {
         >
           <Logo className="size-8" />
           <span className="flex flex-col leading-none">
-            <span className="text-sm font-semibold tracking-tight">{site.name}</span>
+            <span className="text-sm font-semibold tracking-tight whitespace-nowrap">{site.name}</span>
             <span className="mt-1 font-mono text-[0.68rem] tracking-[0.16em] text-dim uppercase">
               {site.role}
             </span>
@@ -126,9 +127,9 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ButtonLink href="#contato" size="md" className="hidden sm:inline-flex">
+          <ContactCta size="md" className="max-sm:hidden">
             Falar comigo
-          </ButtonLink>
+          </ContactCta>
           <button
             type="button"
             aria-expanded={open}
@@ -171,12 +172,13 @@ export function Navbar() {
                 ))}
               </ul>
               <div
-                onClick={(event) => navigateFromMenu(event, "#contato")}
+                onClick={(event) =>
+                  // Link do WhatsApp abre em nova aba: basta fechar o menu.
+                  whatsappUrl ? setOpen(false) : navigateFromMenu(event, CONTACT_ANCHOR)
+                }
                 className="mt-5 sm:hidden"
               >
-                <ButtonLink href="#contato" className="w-full">
-                  Falar comigo
-                </ButtonLink>
+                <ContactCta className="w-full">Falar comigo</ContactCta>
               </div>
             </Container>
           </motion.nav>

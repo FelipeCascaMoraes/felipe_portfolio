@@ -9,7 +9,7 @@ Portfólio profissional: landing page única com hero 3D, projetos, serviços, t
 - Tailwind CSS 4
 - Three.js com React Three Fiber (núcleo 3D do hero)
 - Motion (animações de entrada e menu mobile)
-- Lucide React (ícones)
+- Lucide React (ícones) e Simple Icons (marcas das tecnologias)
 
 ## Executar localmente
 
@@ -38,10 +38,11 @@ Todo o conteúdo fica em `src/data`, separado dos componentes.
 | `contact.ts` | WhatsApp, e-mail, GitHub e LinkedIn |
 | `projects.ts` | Projetos: status, tecnologias, capturas e links |
 | `services.ts` | Serviços (também alimentam as especialidades do hero) |
-| `technologies.ts` | Tecnologias, agrupadas por categoria |
+| `technologies.ts` | Tecnologias, grupos do painel de competências e ícones flutuantes |
 
 Regras de exibição:
 
+- O número e a mensagem do WhatsApp ficam em `contact.ts`. Os botões "Falar comigo", "Entrar em contato" e "Falar sobre meu projeto" abrem a conversa em nova aba, com a mensagem já escrita; sem número configurado, levam à seção de contato.
 - Canal de contato com valor `null` não aparece. O botão "Falar sobre meu projeto" usa o primeiro canal disponível entre WhatsApp, e-mail e LinkedIn e fica oculto enquanto nenhum deles estiver configurado.
 - Projeto sem `liveUrl` ou `repoUrl` não exibe o link correspondente; sem `technologies`, a linha de tecnologias é omitida.
 - Projeto sem `image` usa uma capa abstrata. Para usar uma captura real, salve o arquivo em `public/projects/` e informe o caminho (ex.: `image: "/projects/kerdos-ai.png"`).
@@ -57,7 +58,8 @@ src/
     sections/   uma seção da página por arquivo
     projects/   card e capa de projeto
     three/      cena 3D, alternativa sem WebGL e tratamento de erro
-    ui/         botões, container, títulos, logo e animação de entrada
+    tech/       ícones de tecnologia, ícones flutuantes e painel de competências
+    ui/         botões, container, títulos, logo e animações (Reveal, Parallax, Spotlight)
   data/         conteúdo editável
   hooks/        media query e detecção de WebGL
 ```

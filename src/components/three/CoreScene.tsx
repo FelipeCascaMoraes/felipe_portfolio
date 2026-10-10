@@ -161,7 +161,9 @@ function Core({ animated, particleCount }: CoreProps) {
   const shell = useRef<THREE.Mesh>(null);
   const cloud = useRef<THREE.Points>(null);
   const nodes = useRef<(THREE.Group | null)[]>([]);
+  const rings = useRef<(THREE.MeshBasicMaterial | null)[]>([]);
   const pointer = useRef({ x: 0, y: 0 });
+  const scroll = useRef(0);
   const elapsed = useRef(0);
 
   const particles = useMemo(() => createParticles(particleCount), [particleCount]);
@@ -177,7 +179,19 @@ function Core({ animated, particleCount }: CoreProps) {
     return () => window.removeEventListener("pointermove", onPointerMove);
   }, [animated]);
 
-  useFrame((_, rawDelta) => {
+  useEffect(() => {
+    if (!animated) return;
+
+    // Progresso da rolagem ao longo da primeira tela, de 0 a 1.
+    const onScroll = () => {
+      scroll.current = Math.min(window.scrollY / window.innerHeight, 1);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [animated]);
+
+  useFrame(({ scene }, rawDelta) => {
     if (!animated) return;
     // Limita o salto de tempo ao voltar de uma aba em segundo plano.
     const delta = Math.min(rawDelta, 0.05);
@@ -186,18 +200,31 @@ function Core({ animated, particleCount }: CoreProps) {
     if (rig.current) {
       rig.current.rotation.x = THREE.MathUtils.damp(
         rig.current.rotation.x,
-        pointer.current.y * 0.16,
+        pointer.current.y * 0.22 + scroll.current * 0.5,
         2.5,
         delta,
       );
       rig.current.rotation.y = THREE.MathUtils.damp(
         rig.current.rotation.y,
-        pointer.current.x * 0.26,
+        pointer.current.x * 0.38 - scroll.current * 0.6,
         2.5,
         delta,
       );
       rig.current.position.y = Math.sin(elapsed.current * 0.55) * 0.05;
+      // Ao rolar, o núcleo recua e gira, como se ficasse para trás.
+      rig.current.scale.setScalar(
+        THREE.MathUtils.damp(rig.current.scale.x, 1 - scroll.current * 0.14, 3, delta),
+      );
     }
+    // Gira o ambiente devagar: os reflexos percorrem a superfície da esfera.
+    scene.environmentRotation.y = elapsed.current * 0.12 + pointer.current.x * 0.5;
+    scene.environmentRotation.x = pointer.current.y * 0.25;
+    rings.current.forEach((ring, index) => {
+      if (ring) {
+        ring.opacity =
+          ORBITS[index].opacity * (0.7 + 0.3 * Math.sin(elapsed.current * 0.9 + ORBITS[index].phase));
+      }
+    });
     if (sphere.current) sphere.current.rotation.y += delta * 0.12;
     if (shell.current) {
       shell.current.rotation.y -= delta * 0.05;
@@ -256,6 +283,9 @@ function Core({ animated, particleCount }: CoreProps) {
           <mesh>
             <torusGeometry args={[orbit.radius, 0.005, 8, 220]} />
             <meshBasicMaterial
+              ref={(material) => {
+                rings.current[index] = material;
+              }}
               color={orbit.color}
               transparent
               opacity={orbit.opacity}

@@ -7,7 +7,8 @@ export const hero = {
   description:
     "Desenvolvo soluções em inteligência artificial, automações, CRMs e sistemas personalizados para empresas que querem evoluir com tecnologia.",
   primaryCta: { label: "Ver projetos", href: "#projetos" },
-  secondaryCta: { label: "Entrar em contato", href: "#contato" },
+  // O destino dos botões de contato é definido em contact.ts.
+  secondaryCta: { label: "Entrar em contato" },
 } as const;
 
 export const projectsSection = {
@@ -24,10 +25,23 @@ export const servicesSection = {
 } as const;
 
 export const technologiesSection = {
-  eyebrow: "Tecnologias",
-  title: "Tecnologias que utilizo",
-  subtitle: "Ferramentas que fazem parte do meu trabalho e dos meus projetos.",
+  index: "03",
+  eyebrow: "Stack",
+  titleTop: "Ferramentas",
+  titleBottom: "& Skills",
+  subtitle:
+    "Utilizo ferramentas modernas para construir soluções digitais, da automação de processos às aplicações web.",
 } as const;
+
+/** Faixa em movimento entre o hero e os projetos. */
+export const marqueeItems = [
+  "Inteligência artificial",
+  "Agentes",
+  "Automações",
+  "CRMs e ERPs",
+  "Sistemas sob medida",
+  "Integrações e APIs",
+] as const;
 
 export const about = {
   eyebrow: "Sobre",

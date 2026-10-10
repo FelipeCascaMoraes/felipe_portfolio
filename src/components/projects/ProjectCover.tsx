@@ -81,25 +81,34 @@ export function ProjectCover({ project }: ProjectCoverProps) {
           alt={`Tela do projeto ${project.name}`}
           fill
           sizes="(min-width: 768px) 540px, 100vw"
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+          className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
       ) : (
         <>
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(rgb(255_255_255/0.04)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.04)_1px,transparent_1px)] bg-size-[32px_32px]"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_60%,rgb(74_133_255/0.2),transparent_62%)] transition-opacity duration-700 group-hover:opacity-70"
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,rgb(74_133_255/0.16),transparent_62%)]"
-          />
-          <svg
-            viewBox="0 0 320 200"
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-[1.04]"
-          >
-            {motifs[project.motif]}
-          </svg>
+          {/* Moldura interna: enquadra a arte e se aproxima levemente no hover. */}
+          <div className="absolute inset-x-[9%] top-[13%] -bottom-px overflow-hidden rounded-t-2xl border border-b-0 border-line-strong bg-bg/70 shadow-[0_-18px_50px_-20px_rgb(74_133_255/0.35)] transition-transform duration-700 ease-out group-hover:-translate-y-2 group-hover:scale-[1.025]">
+            <div aria-hidden="true" className="flex h-7 items-center gap-1.5 border-b border-line px-3.5">
+              <span className="size-1.5 rounded-full bg-white/20" />
+              <span className="size-1.5 rounded-full bg-white/20" />
+              <span className="size-1.5 rounded-full bg-white/20" />
+            </div>
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-7 bottom-0 bg-[linear-gradient(rgb(255_255_255/0.04)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.04)_1px,transparent_1px)] bg-size-[28px_28px]"
+            />
+            <svg
+              viewBox="0 0 320 200"
+              preserveAspectRatio="xMidYMid meet"
+              aria-hidden="true"
+              className="absolute inset-x-0 top-7 h-[calc(100%-1.75rem)] w-full"
+            >
+              {motifs[project.motif]}
+            </svg>
+          </div>
         </>
       )}
     </div>

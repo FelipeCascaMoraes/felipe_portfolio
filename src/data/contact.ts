@@ -8,11 +8,16 @@ export interface ContactChannel {
 
 /**
  * Canais de contato. Um canal com valor `null` não é exibido no site.
+ * Este é o único lugar onde o número e a mensagem do WhatsApp são definidos.
  */
 const contactConfig = {
-  // PLACEHOLDER: número com DDI e DDD, apenas dígitos. Ex.: "5511999999999"
-  whatsapp: null as string | null,
-  whatsappMessage: "Olá, Felipe! Vi seu portfólio e gostaria de conversar sobre um projeto.",
+  // Número em formato internacional,
+  // somente dígitos: 55 + DDD + número. Ex.: "5511912345678"
+  // (sem espaços, parênteses, hífens ou sinal de mais).
+  whatsapp: "5511945995522" as string | null,
+  // Mensagem que já vem escrita na conversa. O visitante ainda precisa enviá-la.
+  whatsappMessage:
+    "Olá, Felipe! Conheci seu portfólio e gostaria de conversar sobre um projeto. Podemos falar sobre minha ideia?",
   // PLACEHOLDER: e-mail profissional. Ex.: "contato@seudominio.com"
   email: null as string | null,
   github: "https://github.com/FelipeCascaMoraes" as string | null,
@@ -20,16 +25,29 @@ const contactConfig = {
   linkedin: null as string | null,
 };
 
+/** Monta o link oficial de Click to Chat: https://wa.me/NUMERO?text=MENSAGEM */
+export function buildWhatsAppUrl(number: string, message: string): string {
+  // 55 + DDD (2 dígitos) + número (8 ou 9 dígitos).
+  if (!/^55\d{10,11}$/.test(number)) {
+    throw new Error(
+      `Número de WhatsApp inválido em src/data/contact.ts: "${number}". ` +
+        'Use somente dígitos, no formato 55 + DDD + número (ex.: "5511912345678").',
+    );
+  }
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
+/** Link do WhatsApp, ou `null` enquanto o número não estiver configurado. */
+export const whatsappUrl: string | null = contactConfig.whatsapp
+  ? buildWhatsAppUrl(contactConfig.whatsapp, contactConfig.whatsappMessage)
+  : null;
+
 function buildChannels(): ContactChannel[] {
-  const { whatsapp, whatsappMessage, email, github, linkedin } = contactConfig;
+  const { email, github, linkedin } = contactConfig;
   const channels: ContactChannel[] = [];
 
-  if (whatsapp) {
-    channels.push({
-      id: "whatsapp",
-      label: "WhatsApp",
-      href: `https://wa.me/${whatsapp}?text=${encodeURIComponent(whatsappMessage)}`,
-    });
+  if (whatsappUrl) {
+    channels.push({ id: "whatsapp", label: "WhatsApp", href: whatsappUrl });
   }
   if (email) {
     channels.push({ id: "email", label: "E-mail", href: `mailto:${email}` });
@@ -48,8 +66,11 @@ function buildChannels(): ContactChannel[] {
 export const contactChannels = buildChannels();
 
 /**
- * Destino do botão "Falar sobre meu projeto": o primeiro canal de conversa
- * direta disponível. Sem WhatsApp, e-mail ou LinkedIn, o botão não aparece.
+ * Destino do botão "Falar sobre meu projeto": o WhatsApp ou, na falta dele,
+ * o primeiro canal de conversa direta. Sem nenhum, o botão não aparece.
  */
 export const primaryContact: ContactChannel | null =
   contactChannels.find((channel) => channel.id !== "github") ?? null;
+
+/** Âncora da seção de contato, usada enquanto o WhatsApp não estiver configurado. */
+export const CONTACT_ANCHOR = "#contato";
